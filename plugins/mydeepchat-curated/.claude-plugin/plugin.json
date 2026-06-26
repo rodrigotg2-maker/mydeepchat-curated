@@ -1,7 +1,7 @@
 {
   "name": "mydeepchat-curated",
-  "version": "1.0.1",
-  "description": "Skills curados de skills.mydeepchat.com para proyectos de Rodrigo. 150 skills seleccionados de 894 analizados: transversales (IA, Python, APIs), PiskeSoul (ERP FastAPI/React), Jenny (video/diseno/ads), B1 (scraping/leads) y Croata.",
+  "version": "1.1.0",
+  "description": "Skills curados de skills.mydeepchat.com para proyectos de Rodrigo. 163 skills: 150 instalados en v1.0.1 + 13 forks adaptados en v1.1.0 (segunda ola: generate-migration, frontend-design, security-triage, using-git-worktrees, tdd-workflow, stripe, y más).",
   "author": { "name": "rodrigotg2-maker" },
-  "keywords": ["mydeepchat", "curated", "piskesoul", "jenny", "b1", "croata", "transversal", "python", "fastapi", "react", "video", "ai"]
+  "keywords": ["mydeepchat", "curated", "piskesoul", "jenny", "b1", "croata", "transversal", "python", "fastapi", "react", "video", "ai", "alembic", "playwright", "stripe", "worktrees"]
 }

@@ -2,14 +2,14 @@
   "name": "mydeepchat-curated",
   "owner": { "name": "rodrigotg2-maker" },
   "metadata": {
-    "description": "Marketplace de skills curados de skills.mydeepchat.com para los proyectos de Rodrigo (B1, Jenny, PiskeSoul, Croata). 150 skills seleccionados de 894 analizados y auditados.",
-    "version": "1.0.1"
+    "description": "Marketplace de skills curados de skills.mydeepchat.com para los proyectos de Rodrigo (B1, Jenny, PiskeSoul, Croata). 163 skills seleccionados de 894 analizados y auditados (150 originales + 13 forks adaptados en v1.1.0: segunda ola).",
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "mydeepchat-curated",
       "source": "./plugins/mydeepchat-curated",
-      "description": "150 skills curados de mydeepchat.com: transversales (IA, Python, APIs, research), PiskeSoul (ERP FastAPI/React), Jenny (video/diseno/ads), B1 (scraping/leads) y Croata. Auditados: 144 OK, 6 advertencia, 0 rechazados."
+      "description": "163 skills curados de mydeepchat.com: transversales (IA, Python, APIs, research), PiskeSoul (ERP FastAPI/React/Alembic), Jenny (video/diseño/ads), B1 (scraping/leads) y Croata. 13 forks adaptados en v1.1.0: generate-migration, security-triage, stripe, using-git-worktrees, tdd-workflow, frontend-design, frontend-patterns, y más."
     }
   ]
 }
