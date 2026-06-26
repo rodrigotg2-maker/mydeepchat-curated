@@ -3,7 +3,7 @@
   "owner": { "name": "rodrigotg2-maker" },
   "metadata": {
     "description": "Marketplace de skills curados de skills.mydeepchat.com para los proyectos de Rodrigo (B1, Jenny, PiskeSoul, Croata). 150 skills seleccionados de 894 analizados y auditados.",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "plugins": [
     {
