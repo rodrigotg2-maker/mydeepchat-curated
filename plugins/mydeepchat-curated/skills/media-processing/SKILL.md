@@ -1,9 +1,10 @@
-﻿<!-- NOTA AUDITORIA: WARN: ruta absoluta Unix o symlink: '/etc/' -->
 ---
 name: media-processing
 description: Process multimedia files with FFmpeg (video/audio encoding, conversion, streaming, filtering, hardware acceleration) and ImageMagick (image manipulation, format conversion, batch processing, effects, composition). Use when converting media formats, encoding videos with specific codecs (H.264, H.265, VP9), resizing/cropping images, extracting audio from video, applying filters and effects, optimizing file sizes, creating streaming manifests (HLS/DASH), generating thumbnails, batch processing images, creating composite images, or implementing media processing pipelines. Supports 100+ formats, hardware acceleration (NVENC, QSV), and complex filtergraphs.
 license: MIT
 ---
+
+<!-- NOTA AUDITORIA: Contiene rutas absolutas Unix (/etc/) en ejemplos. Seguro como referencia; adaptar rutas en Windows. -->
 
 # Media Processing Skill
 
@@ -357,4 +358,3 @@ magick -limit memory 2GB -limit map 4GB input.jpg output.jpg
 - FFmpeg Wiki: https://trac.ffmpeg.org/
 - ImageMagick: https://imagemagick.org/
 - ImageMagick Usage: https://imagemagick.org/Usage/
-

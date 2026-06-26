@@ -1,4 +1,3 @@
-﻿<!-- NOTA AUDITORIA: Scripts bash Unix/macOS embebidos - incompatibles con Windows, pero seguros para leer -->
 ---
 name: plan-eng-review
 preamble-tier: 3
@@ -19,18 +18,20 @@ triggers:
   - eng plan review
   - check the implementation plan
 ---
-<!-- AUTO-GENERATED from SKILL.md.tmpl â€” do not edit directly -->
+
+<!-- NOTA AUDITORIA: Contiene scripts bash Unix/macOS (find, jq, /dev/null). Seguro como referencia; no ejecutar literalmente en Windows. -->
+<!-- AUTO-GENERATED from SKILL.md.tmpl — do not edit directly -->
 <!-- Regenerate: bun run gen:skill-docs -->
 
 
 ## When to invoke this skill
 
-Lock in the execution plan â€” architecture,
+Lock in the execution plan — architecture,
 data flow, diagrams, edge cases, test coverage, performance. Walks through
 issues interactively with opinionated recommendations. Use when asked to
 "review the architecture", "engineering review", or "lock in the plan".
 Proactively suggest when the user has a plan or design doc and is about to
-start coding â€” to catch architecture issues before implementation.
+start coding — to catch architecture issues before implementation.
 
 Voice triggers (speech-to-text aliases): "tech review", "technical review", "plan engineering review".
 
@@ -154,9 +155,9 @@ In plan mode, allowed because they inform the plan: `$B`, `$D`, `codex exec`/`co
 
 ## Skill Invocation During Plan Mode
 
-If the user invokes a skill in plan mode, the skill takes precedence over generic plan mode behavior. **Treat the skill file as executable instructions, not reference.** Follow it step by step starting from Step 0; the first AskUserQuestion is the workflow entering plan mode, not a violation of it. AskUserQuestion (any variant â€” `mcp__*__AskUserQuestion` or native; see "AskUserQuestion Format â†’ Tool resolution") satisfies plan mode's end-of-turn requirement. If AskUserQuestion is unavailable or a call fails, follow the AskUserQuestion Format failure fallback: `headless` â†’ BLOCKED; `interactive` â†’ the prose fallback (also satisfies end-of-turn). At a STOP point, stop immediately. Do not continue the workflow or call ExitPlanMode there. Commands marked "PLAN MODE EXCEPTION â€” ALWAYS RUN" execute. Call ExitPlanMode only after the skill workflow completes, or if the user tells you to cancel the skill or leave plan mode.
+If the user invokes a skill in plan mode, the skill takes precedence over generic plan mode behavior. **Treat the skill file as executable instructions, not reference.** Follow it step by step starting from Step 0; the first AskUserQuestion is the workflow entering plan mode, not a violation of it. AskUserQuestion (any variant — `mcp__*__AskUserQuestion` or native; see "AskUserQuestion Format → Tool resolution") satisfies plan mode's end-of-turn requirement. If AskUserQuestion is unavailable or a call fails, follow the AskUserQuestion Format failure fallback: `headless` → BLOCKED; `interactive` → the prose fallback (also satisfies end-of-turn). At a STOP point, stop immediately. Do not continue the workflow or call ExitPlanMode there. Commands marked "PLAN MODE EXCEPTION — ALWAYS RUN" execute. Call ExitPlanMode only after the skill workflow completes, or if the user tells you to cancel the skill or leave plan mode.
 
-If `PROACTIVE` is `"false"`, do not auto-invoke or proactively suggest skills. If a skill seems useful, ask: "I think /skillname might help here â€” want me to run it?"
+If `PROACTIVE` is `"false"`, do not auto-invoke or proactively suggest skills. If a skill seems useful, ask: "I think /skillname might help here — want me to run it?"
 
 If `SKILL_PREFIX` is `"true"`, suggest/invoke `/gstack-*` names. Disk paths stay `~/.claude/skills/gstack/[skill-name]/SKILL.md`.
 
@@ -175,8 +176,8 @@ If `WRITING_STYLE_PENDING` is `yes`: ask once about writing style:
 > v1 prompts are simpler: first-use jargon glosses, outcome-framed questions, shorter prose. Keep default or restore terse?
 
 Options:
-- A) Keep the new default (recommended â€” good writing helps everyone)
-- B) Restore V0 prose â€” set `explain_level: terse`
+- A) Keep the new default (recommended — good writing helps everyone)
+- B) Restore V0 prose — set `explain_level: terse`
 
 If A: leave `explain_level` unset (defaults to `default`).
 If B: run `~/.claude/skills/gstack/bin/gstack-config set explain_level terse`.
@@ -189,7 +190,7 @@ touch ~/.gstack/.writing-style-prompted
 
 Skip if `WRITING_STYLE_PENDING` is `no`.
 
-If `LAKE_INTRO` is `no`: say "gstack follows the **Boil the Ocean** principle â€” do the complete thing when AI makes marginal cost near-zero. Read more: https://garryslist.org/posts/boil-the-ocean" Offer to open:
+If `LAKE_INTRO` is `no`: say "gstack follows the **Boil the Ocean** principle — do the complete thing when AI makes marginal cost near-zero. Read more: https://garryslist.org/posts/boil-the-ocean" Offer to open:
 
 ```bash
 open https://garryslist.org/posts/boil-the-ocean
@@ -216,8 +217,8 @@ Options:
 - A) Sure, anonymous is fine
 - B) No thanks, fully off
 
-If Bâ†’A: run `~/.claude/skills/gstack/bin/gstack-config set telemetry anonymous`
-If Bâ†’B: run `~/.claude/skills/gstack/bin/gstack-config set telemetry off`
+If B→A: run `~/.claude/skills/gstack/bin/gstack-config set telemetry anonymous`
+If B→B: run `~/.claude/skills/gstack/bin/gstack-config set telemetry off`
 
 Always run:
 ```bash
@@ -232,7 +233,7 @@ If `PROACTIVE_PROMPTED` is `no` AND `TEL_PROMPTED` is `yes`: ask once:
 
 Options:
 - A) Keep it on (recommended)
-- B) Turn it off â€” I'll type /commands myself
+- B) Turn it off — I'll type /commands myself
 
 If A: run `~/.claude/skills/gstack/bin/gstack-config set proactive true`
 If B: run `~/.claude/skills/gstack/bin/gstack-config set proactive false`
@@ -246,7 +247,7 @@ Skip if `PROACTIVE_PROMPTED` is `yes`.
 
 ## First-run guidance (one-time)
 
-If `ACTIVATED` is `no` (first skill run on this machine) AND the preamble printed a non-empty `FIRST_TASK:` value that is NOT `nongit`: show ONE short, project-specific line mapped from the token, as a heads-up, then CONTINUE with whatever the user actually asked â€” do NOT halt their task. Map the token: `greenfield` â†’ "Fresh repo â€” shape it first with `/spec` or `/office-hours`." `code_node`/`code_python`/`code_rust`/`code_go`/`code_ruby`/`code_ios` â†’ "There's code here â€” `/qa` to see it work, or `/investigate` if something's off." `branch_ahead` â†’ "Unshipped work on this branch â€” `/review` then `/ship`." `dirty_default` â†’ "Uncommitted changes â€” `/review` before committing." `clean_default` â†’ "Pick one: `/spec`, `/investigate`, or `/qa`." Then substitute the token you saw for TASK_TOKEN and run (best-effort), and mark activated:
+If `ACTIVATED` is `no` (first skill run on this machine) AND the preamble printed a non-empty `FIRST_TASK:` value that is NOT `nongit`: show ONE short, project-specific line mapped from the token, as a heads-up, then CONTINUE with whatever the user actually asked — do NOT halt their task. Map the token: `greenfield` → "Fresh repo — shape it first with `/spec` or `/office-hours`." `code_node`/`code_python`/`code_rust`/`code_go`/`code_ruby`/`code_ios` → "There's code here — `/qa` to see it work, or `/investigate` if something's off." `branch_ahead` → "Unshipped work on this branch — `/review` then `/ship`." `dirty_default` → "Uncommitted changes — `/review` before committing." `clean_default` → "Pick one: `/spec`, `/investigate`, or `/qa`." Then substitute the token you saw for TASK_TOKEN and run (best-effort), and mark activated:
 ```bash
 ~/.claude/skills/gstack/bin/gstack-telemetry-log --event-type first_task_scaffold_shown --skill "TASK_TOKEN" --outcome shown 2>/dev/null || true
 touch ~/.gstack/.activated 2>/dev/null || true
@@ -256,7 +257,7 @@ If `ACTIVATED` is `no` but `FIRST_TASK:` is empty or `nongit` (headless, non-git
 
 Else if `ACTIVATED` is `yes` AND `FIRST_LOOP_SHOWN` is `no`: say once as a heads-up (then continue):
 
-> Tip: gstack pays off when you complete one loop â€” **plan â†’ review â†’ ship**. A common first loop: `/office-hours` or `/spec` to shape it, `/plan-eng-review` to lock it, then `/ship`.
+> Tip: gstack pays off when you complete one loop — **plan → review → ship**. A common first loop: `/office-hours` or `/spec` to shape it, `/plan-eng-review` to lock it, then `/ship`.
 
 Then run `touch ~/.gstack/.first-loop-tip-shown 2>/dev/null || true`.
 
@@ -282,19 +283,19 @@ If A: Append this section to the end of CLAUDE.md:
 When the user's request matches an available skill, invoke it via the Skill tool. When in doubt, invoke the skill.
 
 Key routing rules:
-- Product ideas/brainstorming â†’ invoke /office-hours
-- Strategy/scope â†’ invoke /plan-ceo-review
-- Architecture â†’ invoke /plan-eng-review
-- Design system/plan review â†’ invoke /design-consultation or /plan-design-review
-- Full review pipeline â†’ invoke /autoplan
-- Bugs/errors â†’ invoke /investigate
-- QA/testing site behavior â†’ invoke /qa or /qa-only
-- Code review/diff check â†’ invoke /review
-- Visual polish â†’ invoke /design-review
-- Ship/deploy/PR â†’ invoke /ship or /land-and-deploy
-- Save progress â†’ invoke /context-save
-- Resume context â†’ invoke /context-restore
-- Author a backlog-ready spec/issue â†’ invoke /spec
+- Product ideas/brainstorming → invoke /office-hours
+- Strategy/scope → invoke /plan-ceo-review
+- Architecture → invoke /plan-eng-review
+- Design system/plan review → invoke /design-consultation or /plan-design-review
+- Full review pipeline → invoke /autoplan
+- Bugs/errors → invoke /investigate
+- QA/testing site behavior → invoke /qa or /qa-only
+- Code review/diff check → invoke /review
+- Visual polish → invoke /design-review
+- Ship/deploy/PR → invoke /ship or /land-and-deploy
+- Save progress → invoke /context-save
+- Resume context → invoke /context-restore
+- Author a backlog-ready spec/issue → invoke /spec
 ```
 
 Then commit the change: `git add CLAUDE.md && git commit -m "chore: add gstack skill routing rules to CLAUDE.md"`
@@ -340,9 +341,9 @@ AI orchestrator (e.g., OpenClaw). In spawned sessions:
 
 ### Tool resolution (read first)
 
-"AskUserQuestion" can resolve to two tools at runtime: the **host MCP variant** (e.g. `mcp__conductor__AskUserQuestion` â€” appears in your tool list when the host registers it) or the **native** Claude Code tool.
+"AskUserQuestion" can resolve to two tools at runtime: the **host MCP variant** (e.g. `mcp__conductor__AskUserQuestion` — appears in your tool list when the host registers it) or the **native** Claude Code tool.
 
-**Conductor rule (read before the MCP rule):** if `CONDUCTOR_SESSION: true` was echoed by the preamble, do NOT call AskUserQuestion at all â€” neither native nor any `mcp__*__AskUserQuestion` variant. Render EVERY decision brief as the **prose form** below and STOP. This is proactive, not a reaction to a failure: Conductor disables native AUQ and its MCP variant is flaky (it returns `[Tool result missing due to internal error]`), so prose is the reliable path. **Auto-decide preferences still apply first:** if a `[plan-tune auto-decide] <id> â†’ <option>` result has already surfaced for a question, proceed with that option (no prose). Because in Conductor you go straight to prose without ever calling the tool, this auto-decide-first ordering is enforced HERE, not only by the PreToolUse hook. When you render a Conductor prose brief, also capture it with `bin/gstack-question-log` (the PostToolUse capture hook never fires on a prose path, so `/plan-tune` history/learning depends on this call).
+**Conductor rule (read before the MCP rule):** if `CONDUCTOR_SESSION: true` was echoed by the preamble, do NOT call AskUserQuestion at all — neither native nor any `mcp__*__AskUserQuestion` variant. Render EVERY decision brief as the **prose form** below and STOP. This is proactive, not a reaction to a failure: Conductor disables native AUQ and its MCP variant is flaky (it returns `[Tool result missing due to internal error]`), so prose is the reliable path. **Auto-decide preferences still apply first:** if a `[plan-tune auto-decide] <id> → <option>` result has already surfaced for a question, proceed with that option (no prose). Because in Conductor you go straight to prose without ever calling the tool, this auto-decide-first ordering is enforced HERE, not only by the PreToolUse hook. When you render a Conductor prose brief, also capture it with `bin/gstack-question-log` (the PostToolUse capture hook never fires on a prose path, so `/plan-tune` history/learning depends on this call).
 
 **Rule (non-Conductor):** if any `mcp__*__AskUserQuestion` variant is in your tool list, prefer it. Hosts may disable native AUQ via `--disallowedTools AskUserQuestion` (Conductor does, by default) and route through their MCP variant; calling native there silently fails. Same questions/options shape; same decision-brief format applies.
 
@@ -352,44 +353,44 @@ If AskUserQuestion is unavailable (no variant in your tool list) OR a call to it
 
 Tell three outcomes apart:
 
-1. **Auto-decide denial (NOT a failure).** The result contains `[plan-tune auto-decide] <id> â†’ <option>` â€” the preference hook working as designed. Proceed with that option. Do NOT retry, do NOT fall back to prose.
-2. **Genuine failure** â€” no variant in your tool list, OR the variant is present but the call returns an error / missing result (MCP transport error, empty result, host bug â€” e.g. Conductor's MCP AskUserQuestion is flaky and returns `[Tool result missing due to internal error]`).
-   - If it was present and **errored** (not absent), retry the SAME call **once** â€” but only if no answer could have surfaced (a missing-result error can arrive after the user already saw the question; retrying would double-prompt, so if it may have reached them, treat as pending, don't retry).
-   - Then branch on `SESSION_KIND` (echoed by the preamble; empty/absent â‡’ `interactive`):
-     - `spawned` â†’ defer to the **Spawned session** block: auto-choose the recommended option. Never prose, never BLOCKED.
-     - `headless` â†’ `BLOCKED â€” AskUserQuestion unavailable`; stop and wait (no human can answer).
-     - `interactive` â†’ **prose fallback** (below).
+1. **Auto-decide denial (NOT a failure).** The result contains `[plan-tune auto-decide] <id> → <option>` — the preference hook working as designed. Proceed with that option. Do NOT retry, do NOT fall back to prose.
+2. **Genuine failure** — no variant in your tool list, OR the variant is present but the call returns an error / missing result (MCP transport error, empty result, host bug — e.g. Conductor's MCP AskUserQuestion is flaky and returns `[Tool result missing due to internal error]`).
+   - If it was present and **errored** (not absent), retry the SAME call **once** — but only if no answer could have surfaced (a missing-result error can arrive after the user already saw the question; retrying would double-prompt, so if it may have reached them, treat as pending, don't retry).
+   - Then branch on `SESSION_KIND` (echoed by the preamble; empty/absent ⇒ `interactive`):
+     - `spawned` → defer to the **Spawned session** block: auto-choose the recommended option. Never prose, never BLOCKED.
+     - `headless` → `BLOCKED — AskUserQuestion unavailable`; stop and wait (no human can answer).
+     - `interactive` → **prose fallback** (below).
 
-**Prose fallback â€” render the decision brief as a markdown message, not a tool call.** Same information as the tool format below, different structure (paragraphs, not âœ…/âŒ bullets). It MUST surface this triad:
+**Prose fallback — render the decision brief as a markdown message, not a tool call.** Same information as the tool format below, different structure (paragraphs, not ✅/❌ bullets). It MUST surface this triad:
 
-1. **A clear ELI10 of the issue itself** â€” plain English on what's being decided and why it matters (the question, not per-choice), naming the stakes. Lead with it.
-2. **Completeness scores per choice** â€” explicit `Completeness: X/10` on EACH choice (10 complete, 7 happy-path, 3 shortcut); use the kind-note when options differ in kind not coverage, but never silently drop the score.
-3. **The recommendation and why** â€” a `Recommendation: <choice> because <reason>` line plus the `(recommended)` marker on that choice.
+1. **A clear ELI10 of the issue itself** — plain English on what's being decided and why it matters (the question, not per-choice), naming the stakes. Lead with it.
+2. **Completeness scores per choice** — explicit `Completeness: X/10` on EACH choice (10 complete, 7 happy-path, 3 shortcut); use the kind-note when options differ in kind not coverage, but never silently drop the score.
+3. **The recommendation and why** — a `Recommendation: <choice> because <reason>` line plus the `(recommended)` marker on that choice.
 
-Layout: a `D<N>` title + a one-line note to reply with a letter (in Conductor this is the normal path; elsewhere it means AskUserQuestion was unavailable or errored); the issue ELI10; the Recommendation line; then ONE paragraph per choice carrying its `(recommended)` marker, its `Completeness: X/10`, and 2-4 sentences of reasoning â€” never a bare bullet list; a closing `Net:` line. Split chains / 5+ options: one prose block per per-option call, in sequence. Then STOP and wait â€” the user's typed answer is the decision. In plan mode this satisfies end-of-turn like a tool call.
+Layout: a `D<N>` title + a one-line note to reply with a letter (in Conductor this is the normal path; elsewhere it means AskUserQuestion was unavailable or errored); the issue ELI10; the Recommendation line; then ONE paragraph per choice carrying its `(recommended)` marker, its `Completeness: X/10`, and 2-4 sentences of reasoning — never a bare bullet list; a closing `Net:` line. Split chains / 5+ options: one prose block per per-option call, in sequence. Then STOP and wait — the user's typed answer is the decision. In plan mode this satisfies end-of-turn like a tool call.
 
-**Continuation â€” mapping a typed reply back to a brief.** Each brief carries a stable label (`D<N>`, or `D<N>.k` in a split chain). The user references it (e.g. "3.2: B"). A bare letter maps to the single most-recent UNANSWERED brief; if more than one is open (a split chain), do NOT guess â€” ask which `D<N>.k` it answers. Never apply a bare letter ambiguously across a chain.
+**Continuation — mapping a typed reply back to a brief.** Each brief carries a stable label (`D<N>`, or `D<N>.k` in a split chain). The user references it (e.g. "3.2: B"). A bare letter maps to the single most-recent UNANSWERED brief; if more than one is open (a split chain), do NOT guess — ask which `D<N>.k` it answers. Never apply a bare letter ambiguously across a chain.
 
-**One-way / destructive confirmations in prose.** When the decision is a one-way door (irreversible or destructive â€” delete, force-push, drop, overwrite), prose is a WEAKER gate than the tool, so make it stronger: require an explicit typed confirmation (the exact option letter or word), state plainly what is irreversible, and NEVER proceed on a vague, partial, or ambiguous reply â€” re-ask instead. Treat silence or "ok"/"sure" without the explicit choice as not-yet-confirmed.
+**One-way / destructive confirmations in prose.** When the decision is a one-way door (irreversible or destructive — delete, force-push, drop, overwrite), prose is a WEAKER gate than the tool, so make it stronger: require an explicit typed confirmation (the exact option letter or word), state plainly what is irreversible, and NEVER proceed on a vague, partial, or ambiguous reply — re-ask instead. Treat silence or "ok"/"sure" without the explicit choice as not-yet-confirmed.
 
 ### Format
 
-Every AskUserQuestion is a decision brief and must be sent as tool_use, not prose â€” unless the documented failure fallback above applies (interactive session + the call is unavailable/erroring), in which case the prose fallback is the correct output.
+Every AskUserQuestion is a decision brief and must be sent as tool_use, not prose — unless the documented failure fallback above applies (interactive session + the call is unavailable/erroring), in which case the prose fallback is the correct output.
 
 ```
-D<N> â€” <one-line question title>
+D<N> — <one-line question title>
 Project/branch/task: <1 short grounding sentence using _BRANCH>
 ELI10: <plain English a 16-year-old could follow, 2-4 sentences, name the stakes>
 Stakes if we pick wrong: <one sentence on what breaks, what user sees, what's lost>
 Recommendation: <choice> because <one-line reason>
-Completeness: A=X/10, B=Y/10   (or: Note: options differ in kind, not coverage â€” no completeness score)
+Completeness: A=X/10, B=Y/10   (or: Note: options differ in kind, not coverage — no completeness score)
 Pros / cons:
 A) <option label> (recommended)
-  âœ… <pro â€” concrete, observable, â‰¥40 chars>
-  âŒ <con â€” honest, â‰¥40 chars>
+  ✅ <pro — concrete, observable, ≥40 chars>
+  ❌ <con — honest, ≥40 chars>
 B) <option label>
-  âœ… <pro>
-  âŒ <con>
+  ✅ <pro>
+  ❌ <con>
 Net: <one-line synthesis of what you're actually trading off>
 ```
 
@@ -397,28 +398,28 @@ D-numbering: first question in a skill invocation is `D1`; increment yourself. T
 
 ELI10 is always present, in plain English, not function names. Recommendation is ALWAYS present. Keep the `(recommended)` label; AUTO_DECIDE depends on it.
 
-Completeness: use `Completeness: N/10` only when options differ in coverage. 10 = complete, 7 = happy path, 3 = shortcut. If options differ in kind, write: `Note: options differ in kind, not coverage â€” no completeness score.`
+Completeness: use `Completeness: N/10` only when options differ in coverage. 10 = complete, 7 = happy path, 3 = shortcut. If options differ in kind, write: `Note: options differ in kind, not coverage — no completeness score.`
 
-Pros / cons: use âœ… and âŒ. Minimum 2 pros and 1 con per option when the choice is real; Minimum 40 characters per bullet. Hard-stop escape for one-way/destructive confirmations: `âœ… No cons â€” this is a hard-stop choice`.
+Pros / cons: use ✅ and ❌. Minimum 2 pros and 1 con per option when the choice is real; Minimum 40 characters per bullet. Hard-stop escape for one-way/destructive confirmations: `✅ No cons — this is a hard-stop choice`.
 
-Neutral posture: `Recommendation: <default> â€” this is a taste call, no strong preference either way`; `(recommended)` STAYS on the default option for AUTO_DECIDE.
+Neutral posture: `Recommendation: <default> — this is a taste call, no strong preference either way`; `(recommended)` STAYS on the default option for AUTO_DECIDE.
 
 Effort both-scales: when an option involves effort, label both human-team and CC+gstack time, e.g. `(human: ~2 days / CC: ~15 min)`. Makes AI compression visible at decision time.
 
 Net line closes the tradeoff. Per-skill instructions may add stricter rules.
 
-### Handling 5+ options â€” split, never drop
+### Handling 5+ options — split, never drop
 
 AskUserQuestion caps every call at **4 options**. With 5+ real options, NEVER
 drop, merge, or silently defer one to fit. Pick a compliant shape:
 
-- **Batch into â‰¤4-groups** â€” for coherent alternatives (e.g. version bumps,
+- **Batch into ≤4-groups** — for coherent alternatives (e.g. version bumps,
   layout variants). One call, 5th surfaced only if first 4 don't fit.
-- **Split per-option** â€” for independent scope items (e.g. "ship E1..E6?").
+- **Split per-option** — for independent scope items (e.g. "ship E1..E6?").
   Fire N sequential calls, one per option. Default to this when unsure.
 
 Per-option call shape: `D<N>.k` header (e.g. D3.1..D3.5), ELI10 per option,
-Recommendation, kind-note (no completeness score â€” Include/Defer/Cut/Hold are
+Recommendation, kind-note (no completeness score — Include/Defer/Cut/Hold are
 decision actions), and 4 buckets:
 **A) Include**, **B) Defer**, **C) Cut**, **D) Hold** (stop chain, discuss).
 
@@ -429,15 +430,15 @@ revise one option without re-running the chain.
 For N>6, fire a `D<N>.0` meta-AskUserQuestion first (proceed / narrow / batch).
 
 question_ids for split chains: `<skill>-split-<option-slug>` (kebab-case ASCII,
-â‰¤64 chars, `-2`/`-3` suffix on collision). The runtime checker
+≤64 chars, `-2`/`-3` suffix on collision). The runtime checker
 (`bin/gstack-question-preference`) refuses `never-ask` on any `*-split-*` id,
-so split chains are never AUTO_DECIDE-eligible â€” the user's option set is sacred.
+so split chains are never AUTO_DECIDE-eligible — the user's option set is sacred.
 
 **Full rule + worked examples + Hold/dependency semantics:** see
 `docs/askuserquestion-split.md` in the gstack repo. Read on demand when N>4.
 
-**Non-ASCII characters â€” write directly, never \u-escape.** When any string
-field contains Chinese (ç¹é«”/ç°¡é«”), Japanese, Korean, or other non-ASCII text,
+**Non-ASCII characters — write directly, never \u-escape.** When any string
+field contains Chinese (繁體/簡體), Japanese, Korean, or other non-ASCII text,
 emit the literal UTF-8 characters; never escape them as `\uXXXX` (the pipe is
 UTF-8 native, and manual escaping miscodes long CJK strings). Only `\n`,
 `\t`, `\"`, `\\` remain allowed. Full rationale + worked example: see
@@ -450,13 +451,13 @@ Before calling AskUserQuestion, verify:
 - [ ] ELI10 paragraph present (stakes line too)
 - [ ] Recommendation line present with concrete reason
 - [ ] Completeness scored (coverage) OR kind-note present (kind)
-- [ ] Every option has â‰¥2 âœ… and â‰¥1 âŒ, each â‰¥40 chars (or hard-stop escape)
+- [ ] Every option has ≥2 ✅ and ≥1 ❌, each ≥40 chars (or hard-stop escape)
 - [ ] (recommended) label on one option (even for neutral-posture)
 - [ ] Dual-scale effort labels on effort-bearing options (human / CC)
 - [ ] Net line closes the decision
-- [ ] You are calling the tool, not writing prose â€” unless `CONDUCTOR_SESSION: true` (then prose is the DEFAULT, not the tool) OR the documented failure fallback applies (then: prose with the mandatory triad â€” issue ELI10, per-choice Completeness, Recommendation + `(recommended)` â€” and a "reply with a letter" instruction, then STOP)
+- [ ] You are calling the tool, not writing prose — unless `CONDUCTOR_SESSION: true` (then prose is the DEFAULT, not the tool) OR the documented failure fallback applies (then: prose with the mandatory triad — issue ELI10, per-choice Completeness, Recommendation + `(recommended)` — and a "reply with a letter" instruction, then STOP)
 - [ ] Non-ASCII characters (CJK / accents) written directly, NOT \u-escaped
-- [ ] If you had 5+ options, you split (or batched into â‰¤4-groups) â€” did NOT drop any
+- [ ] If you had 5+ options, you split (or batched into ≤4-groups) — did NOT drop any
 - [ ] If you split, you checked dependencies between options before firing the chain
 - [ ] If a per-option Hold fires, you stopped the chain immediately (didn't queue)
 
@@ -652,7 +653,7 @@ fi
 
 If artifacts are listed, read the newest useful one. If `LAST_SESSION` or `LATEST_CHECKPOINT` appears, give a 2-sentence welcome back summary. If `RECENT_PATTERN` clearly implies a next skill, suggest it once.
 
-**Cross-session decisions.** If `ACTIVE DECISIONS` are listed, treat them as prior settled calls with their rationale â€” do not silently re-litigate them; if you're about to reverse one, say so explicitly. Reach for `~/.claude/skills/gstack/bin/gstack-decision-search` whenever a question touches a past decision ("what did we decide / why / did we try"). When you or the user make a DURABLE decision (architecture, scope, tool/vendor choice, or a reversal) â€” NOT a turn-level or trivial choice â€” log it with `~/.claude/skills/gstack/bin/gstack-decision-log` (`--supersede <id>` for a reversal). Reliable and local; gbrain not required.
+**Cross-session decisions.** If `ACTIVE DECISIONS` are listed, treat them as prior settled calls with their rationale — do not silently re-litigate them; if you're about to reverse one, say so explicitly. Reach for `~/.claude/skills/gstack/bin/gstack-decision-search` whenever a question touches a past decision ("what did we decide / why / did we try"). When you or the user make a DURABLE decision (architecture, scope, tool/vendor choice, or a reversal) — NOT a turn-level or trivial choice — log it with `~/.claude/skills/gstack/bin/gstack-decision-log` (`--supersede <id>` for a reversal). Reliable and local; gbrain not required.
 
 ## Writing Style (skip entirely if `EXPLAIN_LEVEL: terse` appears in the preamble echo OR the user's current message explicitly requests terse / no-explanations output)
 
@@ -668,11 +669,11 @@ Applies to AskUserQuestion, user replies, and findings. AskUserQuestion Format i
 Curated jargon list lives at `~/.claude/skills/gstack/scripts/jargon-list.json` (80+ terms). On the first jargon term you encounter this session, Read that file once; treat the `terms` array as the canonical list. The list is repo-owned and may grow between releases.
 
 
-## Completeness Principle â€” Boil the Ocean
+## Completeness Principle — Boil the Ocean
 
-AI makes completeness cheap, so the complete thing is the goal. Recommend full coverage (tests, edge cases, error paths) â€” boil the ocean one lake at a time. The only thing out of scope is genuinely unrelated work (rewrites, multi-quarter migrations); flag that as separate scope, never as an excuse for a shortcut.
+AI makes completeness cheap, so the complete thing is the goal. Recommend full coverage (tests, edge cases, error paths) — boil the ocean one lake at a time. The only thing out of scope is genuinely unrelated work (rewrites, multi-quarter migrations); flag that as separate scope, never as an excuse for a shortcut.
 
-When options differ in coverage, include `Completeness: X/10` (10 = all edge cases, 7 = happy path, 3 = shortcut). When options differ in kind, write: `Note: options differ in kind, not coverage â€” no completeness score.` Do not fabricate scores.
+When options differ in coverage, include `Completeness: X/10` (10 = all edge cases, 7 = happy path, 3 = shortcut). When options differ in kind, write: `Note: options differ in kind, not coverage — no completeness score.` Do not fabricate scores.
 
 ## Confusion Protocol
 
@@ -711,9 +712,9 @@ If you are looping on the same diagnostic, same file, or failed fix variants, ST
 
 ## Question Tuning (skip entirely if `QUESTION_TUNING: false`)
 
-Before each AskUserQuestion, choose `question_id` from `scripts/question-registry.ts` or `{skill}-{slug}`, then run `~/.claude/skills/gstack/bin/gstack-question-preference --check "<id>"`. `AUTO_DECIDE` means choose the recommended option and say "Auto-decided [summary] â†’ [option] (your preference). Change with /plan-tune." `ASK_NORMALLY` means ask.
+Before each AskUserQuestion, choose `question_id` from `scripts/question-registry.ts` or `{skill}-{slug}`, then run `~/.claude/skills/gstack/bin/gstack-question-preference --check "<id>"`. `AUTO_DECIDE` means choose the recommended option and say "Auto-decided [summary] → [option] (your preference). Change with /plan-tune." `ASK_NORMALLY` means ask.
 
-**Embed the question_id as a marker in the question text** so hooks can identify it deterministically (plan-tune cathedral T14 / D18 progressive markers). Append `<gstack-qid:{question_id}>` somewhere in the rendered question (the leading line or trailing line is fine; the marker doesn't render visibly to the user when wrapped in HTML-style angle brackets, but the hook strips it). Without the marker the PreToolUse enforcement hook treats the AUQ as observed-only and never auto-decides â€” so always include it when the question matches a registered `question_id`.
+**Embed the question_id as a marker in the question text** so hooks can identify it deterministically (plan-tune cathedral T14 / D18 progressive markers). Append `<gstack-qid:{question_id}>` somewhere in the rendered question (the leading line or trailing line is fine; the marker doesn't render visibly to the user when wrapped in HTML-style angle brackets, but the hook strips it). Without the marker the PreToolUse enforcement hook treats the AUQ as observed-only and never auto-decides — so always include it when the question matches a registered `question_id`.
 
 **Embed the option recommendation via the `(recommended)` label suffix** on exactly one option per AUQ. The PreToolUse hook parses `(recommended)` first, falls back to "Recommendation: X" prose, and refuses to auto-decide if ambiguous. Two `(recommended)` labels = refuse.
 
@@ -731,20 +732,20 @@ Write (only after confirmation for free-form):
 ~/.claude/skills/gstack/bin/gstack-question-preference --write '{"question_id":"<id>","preference":"<pref>","source":"inline-user","free_text":"<optional original words>"}'
 ```
 
-Exit code 2 = rejected as not user-originated; do not retry. On success: "Set `<id>` â†’ `<preference>`. Active immediately."
+Exit code 2 = rejected as not user-originated; do not retry. On success: "Set `<id>` → `<preference>`. Active immediately."
 
-## Repo Ownership â€” See Something, Say Something
+## Repo Ownership — See Something, Say Something
 
 `REPO_MODE` controls how to handle issues outside your branch:
-- **`solo`** â€” You own everything. Investigate and offer to fix proactively.
-- **`collaborative`** / **`unknown`** â€” Flag via AskUserQuestion, don't fix (may be someone else's).
+- **`solo`** — You own everything. Investigate and offer to fix proactively.
+- **`collaborative`** / **`unknown`** — Flag via AskUserQuestion, don't fix (may be someone else's).
 
-Always flag anything that looks wrong â€” one sentence, what you noticed and its impact.
+Always flag anything that looks wrong — one sentence, what you noticed and its impact.
 
 ## Search Before Building
 
 Before building anything unfamiliar, **search first.** See `~/.claude/skills/gstack/ETHOS.md`.
-- **Layer 1** (tried and true) â€” don't reinvent. **Layer 2** (new and popular) â€” scrutinize. **Layer 3** (first principles) â€” prize above all.
+- **Layer 1** (tried and true) — don't reinvent. **Layer 2** (new and popular) — scrutinize. **Layer 3** (first principles) — prize above all.
 
 **Eureka:** When first-principles reasoning contradicts conventional wisdom, name it and log:
 ```bash
@@ -754,10 +755,10 @@ jq -n --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg skill "SKILL_NAME" --arg b
 ## Completion Status Protocol
 
 When completing a skill workflow, report status using one of:
-- **DONE** â€” completed with evidence.
-- **DONE_WITH_CONCERNS** â€” completed, but list concerns.
-- **BLOCKED** â€” cannot proceed; state blocker and what was tried.
-- **NEEDS_CONTEXT** â€” missing info; state exactly what is needed.
+- **DONE** — completed with evidence.
+- **DONE_WITH_CONCERNS** — completed, but list concerns.
+- **BLOCKED** — cannot proceed; state blocker and what was tried.
+- **NEEDS_CONTEXT** — missing info; state exactly what is needed.
 
 Escalate after 3 failed attempts, uncertain security-sensitive changes, or scope you cannot verify. Format: `STATUS`, `REASON`, `ATTEMPTED`, `RECOMMENDATION`.
 
@@ -775,7 +776,7 @@ Do not log obvious facts or one-time transient errors.
 
 After workflow completion, log telemetry. Use skill `name:` from frontmatter. OUTCOME is success/error/abort/unknown.
 
-**PLAN MODE EXCEPTION â€” ALWAYS RUN:** This command writes telemetry to
+**PLAN MODE EXCEPTION — ALWAYS RUN:** This command writes telemetry to
 `~/.gstack/analytics/`, matching preamble analytics writes.
 
 Run this bash:
@@ -810,58 +811,58 @@ Skills that run plan reviews (`/plan-*-review`, `/codex review`) include the EXI
 
 Review this plan thoroughly before making any code changes. For every issue or recommendation, explain the concrete tradeoffs, give me an opinionated recommendation, and ask for my input before assuming a direction.
 
-## Scope gate (FIRST â€” overrides everything below). This is a hard STOP.
+## Scope gate (FIRST — overrides everything below). This is a hard STOP.
 
-Before ANYTHING else in this skill â€” before the Design Doc Check, the office-hours prerequisite offer, Step 0, and any `git` / `Read` / `Grep` / `Glob` / `Bash` call â€” your VERY FIRST tool call MUST be AskUserQuestion, to confirm the review target. Do not run the Design Doc Check bash or explore the repo before the user answers.
+Before ANYTHING else in this skill — before the Design Doc Check, the office-hours prerequisite offer, Step 0, and any `git` / `Read` / `Grep` / `Glob` / `Bash` call — your VERY FIRST tool call MUST be AskUserQuestion, to confirm the review target. Do not run the Design Doc Check bash or explore the repo before the user answers.
 
 1. First tool call = AskUserQuestion (tool_use). Confirm what to review.
 2. Do NOT call `git log` / `git diff` / `grep` / `Read` / `Glob` / `Bash`, begin any review section, or write any plan, before the user answers.
-3. If AskUserQuestion is disallowed (`--disallowedTools`), render the options as plain prose â€” each on its own line starting with the letter and paren at column 0 (no blockquote, no leading `>`) â€” then STOP and wait. Use exactly this shape:
+3. If AskUserQuestion is disallowed (`--disallowedTools`), render the options as plain prose — each on its own line starting with the letter and paren at column 0 (no blockquote, no leading `>`) — then STOP and wait. Use exactly this shape:
 
 What should I review?
-A) The current branch diff â€” the work in progress on this branch.
+A) The current branch diff — the work in progress on this branch.
 B) A plan or design doc I'll paste or point you to.
 C) A specific file, directory, or path.
 
-Recommendation: A when a branch diff exists, otherwise B. Reply with A, B, or C. STOP and wait for the answer â€” only after the user picks do you run the Design Doc Check and Step 0 against that target.
+Recommendation: A when a branch diff exists, otherwise B. Reply with A, B, or C. STOP and wait for the answer — only after the user picks do you run the Design Doc Check and Step 0 against that target.
 
 ## Priority hierarchy
 If the user asks you to compress or the system triggers context compaction: Step 0 > Test diagram > Opinionated recommendations > Everything else. Never skip Step 0 or the test diagram. Do not preemptively warn about context limits -- the system handles compaction automatically.
 
 ## My engineering preferences (use these to guide your recommendations):
-* DRY is importantâ€”flag repetition aggressively.
+* DRY is important—flag repetition aggressively.
 * Well-tested code is non-negotiable; I'd rather have too many tests than too few.
-* I want code that's "engineered enough" â€” not under-engineered (fragile, hacky) and not over-engineered (premature abstraction, unnecessary complexity).
+* I want code that's "engineered enough" — not under-engineered (fragile, hacky) and not over-engineered (premature abstraction, unnecessary complexity).
 * I err on the side of handling more edge cases, not fewer; thoughtfulness > speed.
 * Bias toward explicit over clever.
 * Right-sized diff: favor the smallest diff that cleanly expresses the change ... but don't compress a necessary rewrite into a minimal patch. If the existing foundation is broken, say "scrap it and do this instead."
 
-## Cognitive Patterns â€” How Great Eng Managers Think
+## Cognitive Patterns — How Great Eng Managers Think
 
-These are not additional checklist items. They are the instincts that experienced engineering leaders develop over years â€” the pattern recognition that separates "reviewed the code" from "caught the landmine." Apply them throughout your review.
+These are not additional checklist items. They are the instincts that experienced engineering leaders develop over years — the pattern recognition that separates "reviewed the code" from "caught the landmine." Apply them throughout your review.
 
-1. **State diagnosis** â€” Teams exist in four states: falling behind, treading water, repaying debt, innovating. Each demands a different intervention (Larson, An Elegant Puzzle).
-2. **Blast radius instinct** â€” Every decision evaluated through "what's the worst case and how many systems/people does it affect?"
-3. **Boring by default** â€” "Every company gets about three innovation tokens." Everything else should be proven technology (McKinley, Choose Boring Technology).
-4. **Incremental over revolutionary** â€” Strangler fig, not big bang. Canary, not global rollout. Refactor, not rewrite (Fowler).
-5. **Systems over heroes** â€” Design for tired humans at 3am, not your best engineer on their best day.
-6. **Reversibility preference** â€” Feature flags, A/B tests, incremental rollouts. Make the cost of being wrong low.
-7. **Failure is information** â€” Blameless postmortems, error budgets, chaos engineering. Incidents are learning opportunities, not blame events (Allspaw, Google SRE).
-8. **Org structure IS architecture** â€” Conway's Law in practice. Design both intentionally (Skelton/Pais, Team Topologies).
-9. **DX is product quality** â€” Slow CI, bad local dev, painful deploys â†’ worse software, higher attrition. Developer experience is a leading indicator.
-10. **Essential vs accidental complexity** â€” Before adding anything: "Is this solving a real problem or one we created?" (Brooks, No Silver Bullet).
-11. **Two-week smell test** â€” If a competent engineer can't ship a small feature in two weeks, you have an onboarding problem disguised as architecture.
-12. **Glue work awareness** â€” Recognize invisible coordination work. Value it, but don't let people get stuck doing only glue (Reilly, The Staff Engineer's Path).
-13. **Make the change easy, then make the easy change** â€” Refactor first, implement second. Never structural + behavioral changes simultaneously (Beck).
-14. **Own your code in production** â€” No wall between dev and ops. "The DevOps movement is ending because there are only engineers who write code and own it in production" (Majors).
-15. **Error budgets over uptime targets** â€” SLO of 99.9% = 0.1% downtime *budget to spend on shipping*. Reliability is resource allocation (Google SRE).
+1. **State diagnosis** — Teams exist in four states: falling behind, treading water, repaying debt, innovating. Each demands a different intervention (Larson, An Elegant Puzzle).
+2. **Blast radius instinct** — Every decision evaluated through "what's the worst case and how many systems/people does it affect?"
+3. **Boring by default** — "Every company gets about three innovation tokens." Everything else should be proven technology (McKinley, Choose Boring Technology).
+4. **Incremental over revolutionary** — Strangler fig, not big bang. Canary, not global rollout. Refactor, not rewrite (Fowler).
+5. **Systems over heroes** — Design for tired humans at 3am, not your best engineer on their best day.
+6. **Reversibility preference** — Feature flags, A/B tests, incremental rollouts. Make the cost of being wrong low.
+7. **Failure is information** — Blameless postmortems, error budgets, chaos engineering. Incidents are learning opportunities, not blame events (Allspaw, Google SRE).
+8. **Org structure IS architecture** — Conway's Law in practice. Design both intentionally (Skelton/Pais, Team Topologies).
+9. **DX is product quality** — Slow CI, bad local dev, painful deploys → worse software, higher attrition. Developer experience is a leading indicator.
+10. **Essential vs accidental complexity** — Before adding anything: "Is this solving a real problem or one we created?" (Brooks, No Silver Bullet).
+11. **Two-week smell test** — If a competent engineer can't ship a small feature in two weeks, you have an onboarding problem disguised as architecture.
+12. **Glue work awareness** — Recognize invisible coordination work. Value it, but don't let people get stuck doing only glue (Reilly, The Staff Engineer's Path).
+13. **Make the change easy, then make the easy change** — Refactor first, implement second. Never structural + behavioral changes simultaneously (Beck).
+14. **Own your code in production** — No wall between dev and ops. "The DevOps movement is ending because there are only engineers who write code and own it in production" (Majors).
+15. **Error budgets over uptime targets** — SLO of 99.9% = 0.1% downtime *budget to spend on shipping*. Reliability is resource allocation (Google SRE).
 
 When evaluating architecture, think "boring by default." When reviewing tests, think "systems over heroes." When assessing complexity, ask Brooks's question. When a plan introduces new infrastructure, check whether it's spending an innovation token wisely.
 
 ## Documentation and diagrams:
-* I value ASCII art diagrams highly â€” for data flow, state machines, dependency graphs, processing pipelines, and decision trees. Use them liberally in plans and design docs.
+* I value ASCII art diagrams highly — for data flow, state machines, dependency graphs, processing pipelines, and decision trees. Use them liberally in plans and design docs.
 * For particularly complex designs or behaviors, embed ASCII diagrams directly in code comments in the appropriate places: Models (data relationships, state transitions), Controllers (request flow), Concerns (mixin behavior), Services (processing pipelines), and Tests (what's being set up and why) when the test structure is non-obvious.
-* **Diagram maintenance is part of the change.** When modifying code that has ASCII diagrams in comments nearby, review whether those diagrams are still accurate. Update them as part of the same commit. Stale diagrams are worse than no diagrams â€” they actively mislead. Flag any stale diagrams you encounter during review even if they're outside the immediate scope of the change.
+* **Diagram maintenance is part of the change.** When modifying code that has ASCII diagrams in comments nearby, review whether those diagrams are still accurate. Update them as part of the same commit. Stale diagrams are worse than no diagrams — they actively mislead. Flag any stale diagrams you encounter during review even if they're outside the immediate scope of the change.
 
 ## Brain Context (preflight)
 
@@ -885,10 +886,10 @@ rm -f /tmp/.gstack-brain-context-$$.md 2>/dev/null || true
 ```
 
 **How to use this context:**
-- If `product` digest names the value prop, target user, or stage â€” don't re-ask.
-- If `goals` digest lists active goals â€” frame recommendations against them.
-- If `recent-decisions` digest names a prior scope/architecture choice â€” flag if this plan contradicts.
-- If `user-profile` digest carries calibration pattern statements ("tends to over-engineer security") â€” surface them when relevant.
+- If `product` digest names the value prop, target user, or stage — don't re-ask.
+- If `goals` digest lists active goals — frame recommendations against them.
+- If `recent-decisions` digest names a prior scope/architecture choice — flag if this plan contradicts.
+- If `user-profile` digest carries calibration pattern statements ("tends to over-engineer security") — surface them when relevant.
 - If a digest is `(no X digest available yet)`, treat that section as cold; ask the user.
 
 **Privacy:** Salience digest is filtered by allowlist (D9 default: `projects/`,
@@ -896,7 +897,7 @@ rm -f /tmp/.gstack-brain-context-$$.md 2>/dev/null || true
 
 
 ---
-## Section index â€” Read each section when its situation applies
+## Section index — Read each section when its situation applies
 
 This skill is a decision-tree skeleton. The steps below point to on-demand
 sections. Read a section in full before doing its step; do not work from memory.
@@ -918,7 +919,7 @@ DESIGN=$(ls -t ~/.gstack/projects/$SLUG/*-$BRANCH-design-*.md 2>/dev/null | head
 [ -z "$DESIGN" ] && DESIGN=$(ls -t ~/.gstack/projects/$SLUG/*-design-*.md 2>/dev/null | head -1)
 [ -n "$DESIGN" ] && echo "Design doc found: $DESIGN" || echo "No design doc found"
 ```
-If a design doc exists, read it. Use it as the source of truth for the problem statement, constraints, and chosen approach. If it has a `Supersedes:` field, note that this is a revised design â€” check the prior version for context on what changed and why.
+If a design doc exists, read it. Use it as the source of truth for the problem statement, constraints, and chosen approach. If it has a `Supersedes:` field, note that this is a revised design — check the prior version for context on what changed and why.
 
 ## Prerequisite Skill Offer
 
@@ -928,15 +929,15 @@ skill before proceeding.
 Say to the user via AskUserQuestion:
 
 > "No design doc found for this branch. `/office-hours` produces a structured problem
-> statement, premise challenge, and explored alternatives â€” it gives this review much
+> statement, premise challenge, and explored alternatives — it gives this review much
 > sharper input to work with. Takes about 10 minutes. The design doc is per-feature,
-> not per-product â€” it captures the thinking behind this specific change."
+> not per-product — it captures the thinking behind this specific change."
 
 Options:
 - A) Run /office-hours now (we'll pick up the review right after)
-- B) Skip â€” proceed with standard review
+- B) Skip — proceed with standard review
 
-If they skip: "No worries â€” standard review. If you ever want sharper input, try
+If they skip: "No worries — standard review. If you ever want sharper input, try
 /office-hours first next time." Then proceed normally. Do not re-offer later in the session.
 
 If they choose A:
@@ -946,12 +947,12 @@ the review right where we left off."
 
 Read the `/office-hours` skill file at `~/.claude/skills/gstack/office-hours/SKILL.md` using the Read tool.
 
-**If unreadable:** Skip with "Could not load /office-hours â€” skipping." and continue.
+**If unreadable:** Skip with "Could not load /office-hours — skipping." and continue.
 
 Follow its instructions from top to bottom, **skipping these sections** (already handled by the parent skill):
 - Preamble (run first)
 - AskUserQuestion Format
-- Completeness Principle â€” Boil the Ocean
+- Completeness Principle — Boil the Ocean
 - Search Before Building
 - Contributor Mode
 - Completion Status Protocol
@@ -990,9 +991,9 @@ Before reviewing anything, answer these questions:
    - Is the chosen approach current best practice? Search: "{pattern} best practice {current year}"
    - Are there known footguns? Search: "{framework} {pattern} pitfalls"
 
-   If WebSearch is unavailable, skip this check and note: "Search unavailable â€” proceeding with in-distribution knowledge only."
+   If WebSearch is unavailable, skip this check and note: "Search unavailable — proceeding with in-distribution knowledge only."
 
-   If the plan rolls a custom solution where a built-in exists, flag it as a scope reduction opportunity. Annotate recommendations with **[Layer 1]**, **[Layer 2]**, **[Layer 3]**, or **[EUREKA]** (see preamble's Search Before Building section). If you find a eureka moment â€” a reason the standard approach is wrong for this case â€” present it as an architectural insight.
+   If the plan rolls a custom solution where a built-in exists, flag it as a scope reduction opportunity. Annotate recommendations with **[Layer 1]**, **[Layer 2]**, **[Layer 3]**, or **[EUREKA]** (see preamble's Search Before Building section). If you find a eureka moment — a reason the standard approach is wrong for this case — present it as an architectural insight.
 5. **TODOS cross-reference:** Read `TODOS.md` if it exists. Are any deferred items blocking this plan? Can any deferred items be bundled into this PR without expanding scope? Does this plan create new work that should be captured as a TODO?
 
 5. **Completeness check:** Is the plan doing the complete version or a shortcut? With AI-assisted coding, the cost of completeness (100% test coverage, full edge case handling, complete error paths) is 10-100x cheaper than with a human team. If the plan proposes a shortcut that saves human-hours but only saves minutes with CC+gstack, recommend the complete version. Boil the ocean.
@@ -1001,20 +1002,20 @@ Before reviewing anything, answer these questions:
    - Is there a CI/CD workflow for building and publishing the artifact?
    - Are target platforms defined (linux/darwin/windows, amd64/arm64)?
    - How will users download or install it (GitHub Releases, package manager, container registry)?
-   If the plan defers distribution, flag it explicitly in the "NOT in scope" section â€” don't let it silently drop.
+   If the plan defers distribution, flag it explicitly in the "NOT in scope" section — don't let it silently drop.
 
-If the complexity check triggers (8+ files or 2+ new classes/services), STOP before any review-section work. Call AskUserQuestion: name what's overbuilt, propose a minimal version that achieves the core goal, ask whether to reduce or proceed as-is. The AskUserQuestion call is a tool_use, not prose â€” call the tool directly.
+If the complexity check triggers (8+ files or 2+ new classes/services), STOP before any review-section work. Call AskUserQuestion: name what's overbuilt, propose a minimal version that achieves the core goal, ask whether to reduce or proceed as-is. The AskUserQuestion call is a tool_use, not prose — call the tool directly.
 
-**STOP.** Do NOT proceed to Section 1 (Architecture review), edit the plan file with a proposed scope reduction, or call ExitPlanMode until the user responds. Naming the 80% solution in chat prose and continuing â€” or loading the AskUserQuestion schema via ToolSearch and then never invoking it â€” is the failure mode this gate exists to prevent.
+**STOP.** Do NOT proceed to Section 1 (Architecture review), edit the plan file with a proposed scope reduction, or call ExitPlanMode until the user responds. Naming the 80% solution in chat prose and continuing — or loading the AskUserQuestion schema via ToolSearch and then never invoking it — is the failure mode this gate exists to prevent.
 
 If the complexity check does not trigger, present your Step 0 findings and proceed directly to Section 1.
 
-Always work through the full interactive review: one section at a time (Architecture â†’ Code Quality â†’ Tests â†’ Performance) with at most 8 top issues per section.
+Always work through the full interactive review: one section at a time (Architecture → Code Quality → Tests → Performance) with at most 8 top issues per section.
 
 **Critical: Once the user accepts or rejects a scope reduction recommendation, commit fully.** Do not re-argue for smaller scope during later review sections. Do not silently reduce scope or skip planned components.
 
 > **STOP.** Before running the 4-section review, outside voice, required outputs, and review report (only after Step 0 scope is agreed), Read `~/.claude/skills/gstack/plan-eng-review/sections/review-sections.md` and execute it
-> in full. Do not work from memory â€” that section is the source of truth for this step.
+> in full. Do not work from memory — that section is the source of truth for this step.
 
 ## Section self-check (before you finish)
 
@@ -1023,30 +1024,29 @@ Confirm you Read the review section the Section index named, and executed every 
 ## EXIT PLAN MODE GATE (BLOCKING)
 
 Before calling ExitPlanMode, run this self-check. If any item fails, do the
-missing work â€” do NOT call ExitPlanMode:
+missing work — do NOT call ExitPlanMode:
 
 1. Read the plan file with the Read tool (after your most recent write to it).
 2. Confirm the LAST `## ` heading in the file is `## GSTACK REVIEW REPORT`.
    In-body prose that mentions "outside voice", "codex findings", or similar
-   does NOT count â€” only the structured `## GSTACK REVIEW REPORT` section
+   does NOT count — only the structured `## GSTACK REVIEW REPORT` section
    satisfies this check.
 3. Confirm the report has a Runs / Status / Findings table and a VERDICT line
    (CODEX / CROSS-MODEL absorbed if applicable).
 4. Confirm the report's FINAL non-whitespace line is the unresolved-decisions
    status: the exact unbolded `NO UNRESOLVED DECISIONS`, or a bullet of a final
-   `**UNRESOLVED DECISIONS:**` block. BLOCKING, no "if applicable" escape â€” a
+   `**UNRESOLVED DECISIONS:**` block. BLOCKING, no "if applicable" escape — a
    bolded sentinel, any trailing CODEX/CROSS-MODEL/VERDICT/prose, or a missing
    status each FAILS the gate.
 5. If a plan file is in context for this skill invocation: confirm
    `gstack-review-log` was called and `gstack-review-read` was run at least
    once. If no plan file is in context (e.g. `/codex consult` against a
-   diff with no plan), this check short-circuits â€” checks 1-4 already
+   diff with no plan), this check short-circuits — checks 1-4 already
    short-circuit when no plan file exists.
 
-Failing this gate and calling ExitPlanMode anyway is a contract violation â€”
+Failing this gate and calling ExitPlanMode anyway is a contract violation —
 the user will see a plan whose review report is missing or stale, and will
 (correctly) reject it. Self-deception failure mode to watch for: feeling
 "done" after writing review prose into the plan body. The body prose is not
 the report. The report is a separate, structured, table-bearing section that
 must be the file's terminal heading.
-

@@ -1,8 +1,9 @@
-﻿<!-- NOTA AUDITORIA: WARN: ruta absoluta Unix o symlink: '/etc/' -->
 ---
 name: grafana-dashboards
 description: Create and manage production Grafana dashboards for real-time visualization of system and application metrics. Use when building monitoring dashboards, visualizing metrics, or creating operational observability interfaces.
 ---
+
+<!-- NOTA AUDITORIA: Contiene rutas absolutas Unix (/etc/) en ejemplos. Seguro como referencia; adaptar rutas en Windows. -->
 
 # Grafana Dashboards
 
@@ -25,13 +26,13 @@ Design effective Grafana dashboards for monitoring applications, infrastructure,
 ### 1. Hierarchy of Information
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  Critical Metrics (Big Numbers)     â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  Key Trends (Time Series)           â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  Detailed Metrics (Tables/Heatmaps) â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────┐
+│  Critical Metrics (Big Numbers)     │
+├─────────────────────────────────────┤
+│  Key Trends (Time Series)           │
+├─────────────────────────────────────┤
+│  Detailed Metrics (Tables/Heatmaps) │
+└─────────────────────────────────────┘
 ```
 
 ### 2. RED Method (Services)
@@ -381,4 +382,3 @@ resource "grafana_folder" "monitoring" {
 
 - `prometheus-configuration` - For metric collection
 - `slo-implementation` - For SLO dashboards
-
